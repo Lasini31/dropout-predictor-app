@@ -43,6 +43,36 @@ export default function UploadPage() {
     });
   };
 
+  const handleUploadFiles = async (file: File, type: "students" | "parents" | "predictions") => {
+    if (!file) return;
+  
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results: Papa.ParseResult<any>) => {
+        try {
+          const response = await fetch(`/api/upload/${type}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: results.data }),
+          });
+  
+          const result = await response.json();
+          if (result.success) {
+            alert(`${type} data uploaded successfully.`);
+          } else {
+            alert(`Failed to upload ${type} data.`);
+          }
+        } catch (err) {
+          console.error(`Upload error for ${type}:`, err);
+          alert(`Error uploading ${type} data.`);
+        }
+      },
+    });
+  };
+  
+  
+
   const handleDownload = () => {
     const csv = Papa.unparse(predictions);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -113,6 +143,57 @@ export default function UploadPage() {
           </div>
         )}
       </div>
+        <input
+          type="file"
+          accept=".csv"
+          id="upload-students"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) handleUploadFiles(e.target.files[0], "students");
+          }}
+        />
+
+        <input
+          type="file"
+          accept=".csv"
+          id="upload-parents"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) handleUploadFiles(e.target.files[0], "parents");
+          }}
+        />
+
+        <input
+          type="file"
+          accept=".csv"
+          id="upload-predictions"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) handleUploadFiles(e.target.files[0], "predictions");
+          }}
+        />
+        <div className="flex justify-center mt-8">
+          <button
+            className="bg-white text-black px-6 py-2 rounded-md hover:bg-blue-500 transition duration-150 ease-in-out mr-4"
+            onClick={() => document.getElementById("upload-students")?.click()}
+          >
+            Upload Students
+          </button>
+
+          <button
+            className="bg-white text-black px-6 py-2 rounded-md hover:bg-blue-500 transition duration-150 ease-in-out mr-4"
+            onClick={() => document.getElementById("upload-parents")?.click()}
+          >
+            Upload Parents
+          </button>
+
+          <button
+            className="bg-white text-black px-6 py-2 rounded-md hover:bg-blue-500 transition duration-150 ease-in-out mr-4"
+            onClick={() => document.getElementById("upload-predictions")?.click()}
+          >
+            Upload Predictions
+          </button>
+        </div>
     </div>
     </div>
   );
