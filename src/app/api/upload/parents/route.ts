@@ -6,11 +6,21 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { data } = body;
 
-    const client = await connectToDatabase;
-    const db = client.db("dropoutDB"); // or whatever your DB name is
+    // Correct function invocation
+    const client = await connectToDatabase();
+    const db = client.db("dropoutDB");
     const collection = db.collection("parents");
 
-    await collection.insertMany(data);
+    // Preprocess: convert students string to array
+    const processedData = data.map((entry: any) => ({
+      ...entry,
+      students: entry.students
+        .replace(/"/g, "")        // remove all double quotes
+        .split(",")
+        .map((id: string) => id.trim()),
+    }));
+
+    await collection.insertMany(processedData);
 
     return NextResponse.json({ success: true, message: "Parents uploaded." });
   } catch (err) {

@@ -11,17 +11,27 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
 
-  const handleLogin = async () => {
-    await signIn("credentials", {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await signIn("credentials", {
+      redirect: false,
       identifier,
       password,
       role,
-      callbackUrl: "/dashboard",
     });
+
+    if (res?.ok) {
+      if (role === "admin") window.location.href = "/dashboard/admin";
+      else if (role === "student") window.location.href = "/dashboard/student";
+      else if (role === "parent") window.location.href = "/dashboard/parent";
+    } else {
+      alert("Login failed");
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 space-y-4 p-6 border rounded-md">
+    <div className="min-h-screen flex items-center justify-center bg-cover p-6" style={{ backgroundImage: `url('/bg2.jpg')` }}>
+    <div className="max-w-md mx-auto space-y-4 p-10 border rounded-md bg-white">
       <h2 className="text-2xl font-bold">Login</h2>
 
       <Label>Role</Label>
@@ -31,13 +41,14 @@ export default function LoginPage() {
         <option value="admin">Admin</option>
       </select>
 
-      <Label>Index / Parent ID / Username</Label>
+      <Label>Student ID / Parent ID / Username</Label>
       <Input value={identifier} onChange={(e) => setIdentifier(e.target.value)} />
 
       <Label>Password</Label>
       <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
       <Button onClick={handleLogin} className="w-full mt-4">Login</Button>
+    </div>
     </div>
   );
 }

@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { data } = body;
 
-    const client = await connectToDatabase;
+    const client = await connectToDatabase();
     const db = client.db("dropoutDB"); // or whatever your DB name is
     const collection = db.collection("predictions");
 
