@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
 
     const predictionDoc = await db.collection("predictions").findOne({ Index: student.index });
     const prediction = predictionDoc?.Prediction ?? "N/A";
+    const reason = predictionDoc?.Reason ?? "N/A";
 
     return NextResponse.json({
       success: true,
@@ -22,7 +23,8 @@ export async function GET(req: NextRequest) {
         name: student.name,
         student_id: student.student_id,
         index: student.index,
-        prediction,
+        prediction: prediction,
+        reason: reason,
       },
     });
   } catch (error) {

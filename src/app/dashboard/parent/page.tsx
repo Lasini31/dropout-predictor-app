@@ -8,6 +8,7 @@ interface StudentData {
   student_id: string;
   index: string;
   prediction: string;
+  reason: string;
 }
 
 export default function ParentDashboard() {
@@ -57,6 +58,7 @@ export default function ParentDashboard() {
                 <th className="p-3 border">Student ID</th>
                 <th className="p-3 border">Index</th>
                 <th className="p-3 border">Prediction</th>
+                <th className="p-3 border">Reason</th>
               </tr>
             </thead>
             <tbody>
@@ -68,8 +70,9 @@ export default function ParentDashboard() {
                   <td className="p-3 border">
                     <span className={`font-semibold ${s.prediction === "dropout" ? "text-red-600" : "text-green-600"}`}>
                       {s.prediction}
-                    </span>
+                    </span> 
                   </td>
+                  <td className="p-3 border">{s.reason}</td>
                 </tr>
               ))}
             </tbody>

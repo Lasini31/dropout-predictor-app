@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
         name: student.name,
         index: student.index,
         prediction: match?.Prediction || "N/A",
+        reason: match?.Reason || "N/A",
       };
     });
 

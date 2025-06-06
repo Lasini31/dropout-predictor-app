@@ -29,13 +29,29 @@ export default function UploadPage() {
         });
 
         const result = await response.json();
-        const predictions = result.prediction;
+        const predictionArray = result.prediction;
+        const explanations = result.explanation;
 
-        // Attach predictions to the original data
-        const combined = parsedData.map((row, idx) => ({
-          ...row,
-          Prediction: predictions[idx] === 1 ? "Dropout" : "Graduate",
-        }));
+        console.log("Prediction Array:", predictionArray);
+        console.log("Explanations:", explanations);
+
+        // Attach predictions and top SHAP feature to the original data
+        const combined = parsedData.map((row: any, idx: number) => {
+          let top_feature;
+          if (predictionArray[idx] == 1) {
+            top_feature = Object.entries(explanations[idx] || {})
+              .sort((a, b) => (b[1] as number) - (a[1] as number))[0]?.[0] || "N/A";
+          } else {
+            top_feature = Object.entries(explanations[idx] || {})
+              .sort((a, b) => (a[1] as number) - (b[1] as number))[0]?.[0] || "N/A";
+          }
+
+          return {
+            ...row,
+            Prediction: predictionArray[idx] === 1 ? "Dropout" : "Graduate",
+            "Reason": top_feature,
+          };
+        });
 
         setPredictions(combined);
         alert("Predictions complete! Scroll down to see results or download as CSV.");

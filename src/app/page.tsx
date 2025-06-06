@@ -6,7 +6,7 @@ export default function Home() {
         <p className="text-gray-700 mb-6">Welcome! Please login to access your dashboard.</p>
         <a
           href="/login"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+          className="inline-block bg-black text-white px-6 py-3 rounded hover:bg-blue-700 transition"
         >
           Go to Login
         </a>

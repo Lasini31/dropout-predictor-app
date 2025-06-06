@@ -8,6 +8,7 @@ interface StudentData {
   student_id: string;
   index: string;
   prediction: string;
+  reason: string;
 }
 
 export default function StudentDashboard() {
@@ -41,6 +42,7 @@ export default function StudentDashboard() {
             <p><strong>Student ID:</strong> {student.student_id}</p>
             <p><strong>Index:</strong> {student.index}</p>
             <p><strong>Prediction:</strong> {student.prediction}</p>
+            <p><strong>Reason:</strong> {student.reason}</p>
           </>
         ) : (
           <p>Loading student data...</p>
